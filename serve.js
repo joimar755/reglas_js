@@ -29,16 +29,6 @@ app.post("/pacientes", async (req, res) => {
     try {
         const { nombre, sintomas } = req.body;
 
-        // Guardamos al paciente con los síntomas en la BD
-        const paciente = await prisma.paciente.create({
-            data: {
-                // guardamos los síntomas en JSON
-                nombre,
-                sintoma: JSON.stringify(sintomas),
-                diagnostico: ""
-            },
-        });
-
         // Ejecutamos el motor de reglas
         const engine = new Engine(rules);
         const results = await engine.run(sintomas);
@@ -49,13 +39,18 @@ app.post("/pacientes", async (req, res) => {
             diagnostico = results.events[0].params.diagnostico;
         }
 
-        await prisma.paciente.update({
-            where: { id: paciente.id },
-            data: { diagnostico }
+       // Guardamos al paciente con los síntomas en la BD
+        const paciente = await prisma.paciente.create({
+            data: {
+                // guardamos los síntomas en JSON
+                nombre,
+                sintoma: JSON.stringify(sintomas),
+                diagnostico
+            },
         });
 
         return res.json({
-            paciente: { ...paciente, diagnostico },
+            paciente
         });
     } catch (error) {
         console.error(error);
