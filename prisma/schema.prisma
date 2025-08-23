@@ -13,10 +13,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Paciente{
-  id Int @id @default(autoincrement())
-  nombre String @unique
-  sintoma String
-  diagnostico String?
+model Paciente {
+  id       Int      @id @default(autoincrement())
+  nombre   String   @unique
+  email    String?
+  eventos  Event[]
   createAT DateTime @default(now())
+}
+
+model Rules {
+  id          Int          @id @default(autoincrement())
+  nombre      String
+  condiciones Codiciones[]
+  eventos     Event[]
+}
+
+model Codiciones {
+  id       Int     @id @default(autoincrement())
+  fact     String
+  operator String
+  value    Boolean
+  reglaId  Int
+  regla    Rules   @relation(fields: [reglaId], references: [id])
+}
+
+model Event {
+  id          Int      @id @default(autoincrement())
+  type        String
+  diagnostico String
+  reglaId     Int      @unique
+  regla       Rules    @relation(fields: [reglaId], references: [id])
+  PacienteId  Int      @unique
+  Paciente    Paciente @relation(fields: [PacienteId], references: [id])
 }
