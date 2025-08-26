@@ -14,35 +14,43 @@ datasource db {
 }
 
 model Paciente {
-  id       Int      @id @default(autoincrement())
-  nombre   String   @unique
-  email    String?
-  eventos  Event[]
-  createAT DateTime @default(now())
+  id           Int                     @id @default(autoincrement())
+  nombre       String                  @unique
+  email        String                  @unique
+  diagnosticos Diagnostico_Pacientes[]
+  createdAt    DateTime                @default(now())
 }
 
 model Rules {
-  id          Int          @id @default(autoincrement())
-  nombre      String
-  condiciones Codiciones[]
-  eventos     Event[]
+  id                    Int                    @id @default(autoincrement())
+  nombre                String
+  condicion             Condicion[]
+  eventoRegla           EventRegla[]
 }
 
-model Codiciones {
-  id       Int     @id @default(autoincrement())
-  fact     String
-  operator String
-  value    Boolean
-  reglaId  Int
-  regla    Rules   @relation(fields: [reglaId], references: [id])
+model Condicion {
+  id        Int                     @id @default(autoincrement())
+  fact      String
+  operator  String
+  value     Boolean
+  reglaId   Int
+  regla     Rules                   @relation(fields: [reglaId], references: [id])
 }
 
-model Event {
-  id          Int      @id @default(autoincrement())
+model EventRegla {
+  id          Int    @id @default(autoincrement())
   type        String
   diagnostico String
-  reglaId     Int      @unique
-  regla       Rules    @relation(fields: [reglaId], references: [id])
-  PacienteId  Int      @unique
-  Paciente    Paciente @relation(fields: [PacienteId], references: [id])
+  reglaId     Int    @unique
+  regla       Rules  @relation(fields: [reglaId], references: [id])
+  pacientes   Diagnostico_Pacientes[]
+}
+
+model Diagnostico_Pacientes {
+  id            Int        @id @default(autoincrement())
+  pacienteId    Int
+  paciente      Paciente   @relation(fields: [pacienteId], references: [id])
+  eventReglaId  Int         @unique
+  eventRegla    EventRegla      @relation(fields: [eventReglaId], references: [id])
+  createdAt     DateTime   @default(now())
 }
