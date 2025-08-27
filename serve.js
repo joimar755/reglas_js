@@ -1,14 +1,14 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
 import { Engine } from "json-rules-engine";
-
+import { rules } from "./rules.js";
 const app = express();
 const prisma = new PrismaClient();
 
 app.use(express.json());
 
 // Reglas médicas
-const rules = [
+/* const rules = [
     {
         conditions: {
             all: [
@@ -35,7 +35,7 @@ const rules = [
             params: { diagnostico: "faringitis" },
         },
     },
-];
+]; */
 
 // 👉 Ruta para registrar paciente y evaluar diagnóstico
 app.post("/pacientes", async (req, res) => {
