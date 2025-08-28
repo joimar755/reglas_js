@@ -1,70 +1,49 @@
-// prisma/seed.ts
 import { PrismaClient } from "@prisma/client";
+import { rules } from "./rules.js"; // tu archivo rules.js
+
 const prisma = new PrismaClient();
 
 async function main() {
-  const data = [
-    [true, true, true, true, true, "Gastroenteritis probable"],
-    [true, true, true, true, false, "Intoxicación alimentaria probable"],
-    [true, true, true, false, true, "Dolor abdominal + fiebre (alerta)"],
-    [true, true, true, false, false, "Indeterminado / evaluar"],
-    [true, true, false, true, true, "Gastroenteritis probable"],
-    [true, true, false, true, false, "Indeterminado / evaluar"],
-    [true, true, false, false, true, "Dolor abdominal + fiebre (alerta)"],
-    [true, true, false, false, false, "Reflujo/Dispepsia"],
-    [true, false, true, true, true, "Gastroenteritis probable"],
-    [true, false, true, true, false, "Intoxicación alimentaria probable"],
-    [true, false, true, false, true, "Dolor abdominal + fiebre (alerta)"],
-    [true, false, true, false, false, "Indeterminado / evaluar"],
-    [true, false, false, true, true, "Indeterminado / evaluar"],
-    [true, false, false, true, false, "Indeterminado / evaluar"],
-    [true, false, false, false, true, "Dolor abdominal + fiebre (alerta)"],
-    [true, false, false, false, false, "Indigestión"],
-    [false, true, true, true, true, "Gastroenteritis probable"],
-    [false, true, true, true, false, "Intoxicación alimentaria probable"],
-    [false, true, true, false, true, "Indeterminado / evaluar"],
-    [false, true, true, false, false, "Indeterminado / evaluar"],
-    [false, true, false, true, true, "Gastroenteritis probable"],
-    [false, true, false, true, false, "Indeterminado / evaluar"],
-    [false, true, false, false, true, "Indeterminado / evaluar"],
-    [false, true, false, false, false, "Reflujo/Dispepsia"],
-    [false, false, true, true, true, "Gastroenteritis probable"],
-    [false, false, true, true, false, "Intoxicación alimentaria probable"],
-    [false, false, true, false, true, "Indeterminado / evaluar"],
-    [false, false, true, false, false, "Asintomático / observación"],
-    [false, false, false, true, true, "Indeterminado / evaluar"],
-    [false, false, false, true, false, "Asintomático / observación"],
-    [false, false, false, false, true, "Asintomático / observación"],
-    [false, false, false, false, false, "Asintomático / observación"],
-  ];
+  // 1. Insertar facts fijos
+  const factos = ["dolor_abdominal", "nauseas", "vomito", "diarrea", "fiebre"];
+  await prisma.facts.createMany({
+    data: factos.map((f) => ({ nombre: f })),
+    skipDuplicates: true,
+  });
 
+  const factosDB = await prisma.facts.findMany();
 
-  const facts = ["fiebre", "nauseas", "vomito", "diarrea", "dolorAbdominal"];
-
-  for (let i = 0; i < data.length; i++) {
-    const [fiebre, nauseas, vomito, diarrea, dolorAbdominal, diagnostico] = data[i];
+  // 2. Insertar reglas
+  for (let i = 0; i < rules.length; i++) {
+    const rule = rules[i];
 
     await prisma.rules.create({
       data: {
-        nombre: `Caso ${i + 1}`,
+        nombre: `Regla ${i + 1}`,
         condicion: {
-          create: facts.map((fact, idx) => ({
-            fact,
-            operator: "equal",
-            value: data[i][idx],
+          create: rule.conditions.all.map((c) => ({
+            operator: c.operator,
+            value: c.value,
+            factId: (() => {
+              const fact = factosDB.find((f) => f.nombre === c.fact);
+              if (!fact) {
+                throw new Error(`Fact not found for: ${c.fact}`);
+              }
+              return fact.id;
+            })(), // ✅ enlazamos fact existente
           })),
         },
         eventoRegla: {
           create: {
-            type: "diagnostico",
-            diagnostico,
+            type: rule.event.type,
+            diagnostico: rule.event.params.mensaje,
           },
         },
       },
     });
   }
 
-  console.log("✅ Reglas insertadas correctamente");
+  console.log("✅ Reglas insertadas en la BD");
 }
 
 main()
@@ -72,6 +51,4 @@ main()
     console.error(e);
     process.exit(1);
   })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+  .finally(() => prisma.$disconnect());

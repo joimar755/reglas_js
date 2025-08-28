@@ -1,4 +1,4 @@
-const rules = [
+export const rules = [
   {
     "conditions": { "all": [
       { "fact": "dolor_abdominal", "operator": "equal", "value": true },
@@ -63,4 +63,3 @@ const rules = [
     "event": { "type": "diagnostico", "params": { "mensaje": "Sin evidencia de enfermedad digestiva" } }
   }
 ]
-exports.rules = rules;
