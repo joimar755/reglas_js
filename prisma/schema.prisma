@@ -59,7 +59,7 @@ model Diagnostico_Pacientes {
   id           Int        @id @default(autoincrement())
   pacienteId   Int
   paciente     Paciente   @relation(fields: [pacienteId], references: [id])
-  eventReglaId Int        @unique
+  eventReglaId Int        
   eventRegla   EventRegla @relation(fields: [eventReglaId], references: [id])
   createdAt    DateTime   @default(now())
 }
