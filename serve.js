@@ -126,7 +126,7 @@ app.post("/test", async (req, res) => {
       paciente,
       diagnostico,
       diagPaciente,
-      
+
     };
 
     console.log(respuesta); // solo loguea en consola
@@ -143,12 +143,56 @@ app.post("/test", async (req, res) => {
 // 👉 Ruta para listar pacientes
 app.get("/pacientes", async (req, res) => {
   const pacientes = await prisma.paciente.findMany({
-    include:{
-      diagnosticos:true
-    }
+    include: {
+      diagnosticos: {
+        include: {
+          eventRegla: true, // Incluye la relación eventRegla dentro de diagnosticos
+        },
+      },
+    },
   });
-  res.json(pacientes);
-  console.log(pacientes);
+
+  const relacion = pacientes.map(paciente => ({
+    nombre: paciente.nombre,
+    email: paciente.email,
+    diagnosticos: paciente.diagnosticos.map(diagnostico => ({
+      eventReglaId: diagnostico.eventReglaId,
+      diagnostico: diagnostico.eventRegla?.diagnostico || "No disponible",
+    }))
+  }));
+
+  res.json(relacion);
+  console.log(relacion);
+});
+
+app.get("/pacientes/:id", async (req, res) => {
+  const pacientes = await prisma.paciente.findFirst({
+    where: { id: Number(req.params.id) },
+    include: {
+      diagnosticos: {
+        include: {
+          eventRegla: true, // Incluye la relación eventRegla dentro de diagnosticos
+        },
+      },
+    },
+  });
+
+  if (pacientes === null) {
+    return res.status(404).json({ error: "Paciente no encontrado" });
+  } else {
+    const relacion = {
+      id: pacientes.id,
+      nombre: pacientes.nombre,
+      email: pacientes.email,
+      diagnosticos: pacientes.diagnosticos.map(diagnostico => ({
+        eventReglaId: diagnostico.eventReglaId,
+        diagnostico: diagnostico.eventRegla?.diagnostico || "No disponible",
+      }))
+    };
+    res.json(relacion);
+    console.log(relacion);
+  }
+
 });
 
 app.listen(3000, () => {
