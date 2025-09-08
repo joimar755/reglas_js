@@ -12,37 +12,6 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
 
-
-// Reglas médicas
-/* const rules = [
-    {
-        conditions: {
-            all: [
-                { fact: "fiebre", operator: "equal", value: true },
-                { fact: "tos", operator: "equal", value: true },
-                { fact: "dificultadParaRespirar", operator: "equal", value: true },
-            ],
-        },
-        event: {
-            type: "diagnostico",
-            params: { diagnostico: "neumonía" },
-        },
-    },
-    {
-        conditions: {
-            all: [
-                { fact: "fiebre", operator: "equal", value: true },
-                { fact: "tos", operator: "equal", value: true },
-                { fact: "dolorDeGarganta", operator: "equal", value: true },
-            ],
-        },
-        event: {
-            type: "diagnostico",
-            params: { diagnostico: "faringitis" },
-        },
-    },
-]; */
-
 // 👉 Ruta para registrar paciente y evaluar diagnóstico
 app.post("/pacientes", async (req, res) => {
   try {

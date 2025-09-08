@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 async function main() {
   // 1. Insertar facts fijos
-  const factos = ["dolor_abdominal", "nauseas", "vomito", "diarrea", "fiebre"];
+  const factos = ["dolor_lumbar", "dolor_miccion", "orina_con_sangre", "fiebre", "orina_frecuente"];
   await prisma.facts.createMany({
     data: factos.map((f) => ({ nombre: f })),
     skipDuplicates: true,

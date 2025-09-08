@@ -1,65 +1,133 @@
 export const rules = [
-  {
+    {
     "conditions": { "all": [
-      { "fact": "dolor_abdominal", "operator": "equal", "value": true },
-      { "fact": "nauseas", "operator": "equal", "value": true },
-      { "fact": "vomito", "operator": "equal", "value": true },
-      { "fact": "diarrea", "operator": "equal", "value": true },
-      { "fact": "fiebre", "operator": "equal", "value": true }
+      { "fact": "dolor_lumbar", "operator": "equal", "value": true },
+      { "fact": "dolor_miccion", "operator": "equal", "value": true },
+      { "fact": "orina_con_sangre", "operator": "equal", "value": true },
+      { "fact": "fiebre", "operator": "equal", "value": true },
+      { "fact": "orina_frecuente", "operator": "equal", "value": true }
     ]},
-    "event": { "type": "diagnostico", "params": { "mensaje": "Gastroenteritis aguda" } }
+    "event": { "type": "diagnostico", "params": { "mensaje": "Infección urinaria severa" } }
   },
   {
     "conditions": { "all": [
-      { "fact": "dolor_abdominal", "operator": "equal", "value": true },
-      { "fact": "nauseas", "operator": "equal", "value": true },
-      { "fact": "vomito", "operator": "equal", "value": false },
-      { "fact": "diarrea", "operator": "equal", "value": true },
-      { "fact": "fiebre", "operator": "equal", "value": true }
+      { "fact": "dolor_lumbar", "operator": "equal", "value": true },
+      { "fact": "dolor_miccion", "operator": "equal", "value": true },
+      { "fact": "orina_con_sangre", "operator": "equal", "value": true },
+      { "fact": "fiebre", "operator": "equal", "value": false },
+      { "fact": "orina_frecuente", "operator": "equal", "value": true }
     ]},
-    "event": { "type": "diagnostico", "params": { "mensaje": "Infección intestinal leve" } }
+    "event": { "type": "diagnostico", "params": { "mensaje": "Cistitis aguda" } }
   },
   {
     "conditions": { "all": [
-      { "fact": "dolor_abdominal", "operator": "equal", "value": true },
-      { "fact": "nauseas", "operator": "equal", "value": false },
-      { "fact": "vomito", "operator": "equal", "value": true },
-      { "fact": "diarrea", "operator": "equal", "value": true },
-      { "fact": "fiebre", "operator": "equal", "value": false }
+      { "fact": "dolor_lumbar", "operator": "equal", "value": true },
+      { "fact": "dolor_miccion", "operator": "equal", "value": false },
+      { "fact": "orina_con_sangre", "operator": "equal", "value": true },
+      { "fact": "fiebre", "operator": "equal", "value": true },
+      { "fact": "orina_frecuente", "operator": "equal", "value": false }
     ]},
-    "event": { "type": "diagnostico", "params": { "mensaje": "Indigestión alimentaria" } }
+    "event": { "type": "diagnostico", "params": { "mensaje": "Cálculos renales" } }
   },
   {
     "conditions": { "all": [
-      { "fact": "dolor_abdominal", "operator": "equal", "value": false },
-      { "fact": "nauseas", "operator": "equal", "value": true },
-      { "fact": "vomito", "operator": "equal", "value": true },
-      { "fact": "diarrea", "operator": "equal", "value": false },
-      { "fact": "fiebre", "operator": "equal", "value": true }
+      { "fact": "dolor_lumbar", "operator": "equal", "value": true },
+      { "fact": "dolor_miccion", "operator": "equal", "value": true },
+      { "fact": "orina_con_sangre", "operator": "equal", "value": false },
+      { "fact": "fiebre", "operator": "equal", "value": true },
+      { "fact": "orina_frecuente", "operator": "equal", "value": true }
     ]},
-    "event": { "type": "diagnostico", "params": { "mensaje": "Intoxicación alimentaria" } }
+    "event": { "type": "diagnostico", "params": { "mensaje": "Pielonefritis" } }
   },
   {
     "conditions": { "all": [
-      { "fact": "dolor_abdominal", "operator": "equal", "value": true },
-      { "fact": "nauseas", "operator": "equal", "value": true },
-      { "fact": "vomito", "operator": "equal", "value": false },
-      { "fact": "diarrea", "operator": "equal", "value": false },
-      { "fact": "fiebre", "operator": "equal", "value": true }
+      { "fact": "dolor_lumbar", "operator": "equal", "value": false },
+      { "fact": "dolor_miccion", "operator": "equal", "value": true },
+      { "fact": "orina_con_sangre", "operator": "equal", "value": false },
+      { "fact": "fiebre", "operator": "equal", "value": false },
+      { "fact": "orina_frecuente", "operator": "equal", "value": true }
     ]},
-    "event": { "type": "diagnostico", "params": { "mensaje": "Colitis infecciosa" } }
+    "event": { "type": "diagnostico", "params": { "mensaje": "Infección urinaria leve" } }
+  },
+  {
+    "conditions": { "all": [
+      { "fact": "dolor_lumbar", "operator": "equal", "value": false },
+      { "fact": "dolor_miccion", "operator": "equal", "value": true },
+      { "fact": "orina_con_sangre", "operator": "equal", "value": true },
+      { "fact": "fiebre", "operator": "equal", "value": false },
+      { "fact": "orina_frecuente", "operator": "equal", "value": false }
+    ]},
+    "event": { "type": "diagnostico", "params": { "mensaje": "Hematuria por irritación vesical" } }
+  },
+  {
+    "conditions": { "all": [
+      { "fact": "dolor_lumbar", "operator": "equal", "value": true },
+      { "fact": "dolor_miccion", "operator": "equal", "value": false },
+      { "fact": "orina_con_sangre", "operator": "equal", "value": false },
+      { "fact": "fiebre", "operator": "equal", "value": true },
+      { "fact": "orina_frecuente", "operator": "equal", "value": true }
+    ]},
+    "event": { "type": "diagnostico", "params": { "mensaje": "Infección renal inicial" } }
+  },
+  {
+    "conditions": { "all": [
+      { "fact": "dolor_lumbar", "operator": "equal", "value": true },
+      { "fact": "dolor_miccion", "operator": "equal", "value": false },
+      { "fact": "orina_con_sangre", "operator": "equal", "value": true },
+      { "fact": "fiebre", "operator": "equal", "value": false },
+      { "fact": "orina_frecuente", "operator": "equal", "value": false }
+    ]},
+    "event": { "type": "diagnostico", "params": { "mensaje": "Litiasis urinaria" } }
+  },
+  {
+    "conditions": { "all": [
+      { "fact": "dolor_lumbar", "operator": "equal", "value": false },
+      { "fact": "dolor_miccion", "operator": "equal", "value": true },
+      { "fact": "orina_con_sangre", "operator": "equal", "value": true },
+      { "fact": "fiebre", "operator": "equal", "value": true },
+      { "fact": "orina_frecuente", "operator": "equal", "value": true }
+    ]},
+    "event": { "type": "diagnostico", "params": { "mensaje": "Cistitis hemorrágica" } }
+  },
+  {
+    "conditions": { "all": [
+      { "fact": "dolor_lumbar", "operator": "equal", "value": false },
+      { "fact": "dolor_miccion", "operator": "equal", "value": false },
+      { "fact": "orina_con_sangre", "operator": "equal", "value": true },
+      { "fact": "fiebre", "operator": "equal", "value": true },
+      { "fact": "orina_frecuente", "operator": "equal", "value": true }
+    ]},
+    "event": { "type": "diagnostico", "params": { "mensaje": "Glomerulonefritis" } }
+  },
+  {
+    "conditions": { "all": [
+      { "fact": "dolor_lumbar", "operator": "equal", "value": false },
+      { "fact": "dolor_miccion", "operator": "equal", "value": false },
+      { "fact": "orina_con_sangre", "operator": "equal", "value": true },
+      { "fact": "fiebre", "operator": "equal", "value": false },
+      { "fact": "orina_frecuente", "operator": "equal", "value": true }
+    ]},
+    "event": { "type": "diagnostico", "params": { "mensaje": "Microhematuria benigna" } }
+  },
+  {
+    "conditions": { "all": [
+      { "fact": "dolor_lumbar", "operator": "equal", "value": true },
+      { "fact": "dolor_miccion", "operator": "equal", "value": true },
+      { "fact": "orina_con_sangre", "operator": "equal", "value": false },
+      { "fact": "fiebre", "operator": "equal", "value": false },
+      { "fact": "orina_frecuente", "operator": "equal", "value": true }
+    ]},
+    "event": { "type": "diagnostico", "params": { "mensaje": "Síndrome de vejiga hiperactiva" } }
   },
 
-  // ... aquí continúan hasta completar 32 diagnósticos distintos ...
-  
   {
     "conditions": { "all": [
-      { "fact": "dolor_abdominal", "operator": "equal", "value": false },
-      { "fact": "nauseas", "operator": "equal", "value": false },
-      { "fact": "vomito", "operator": "equal", "value": false },
-      { "fact": "diarrea", "operator": "equal", "value": false },
-      { "fact": "fiebre", "operator": "equal", "value": false }
+      { "fact": "dolor_lumbar", "operator": "equal", "value": false },
+      { "fact": "dolor_miccion", "operator": "equal", "value": false },
+      { "fact": "orina_con_sangre", "operator": "equal", "value": false },
+      { "fact": "fiebre", "operator": "equal", "value": false },
+      { "fact": "orina_frecuente", "operator": "equal", "value": false }
     ]},
-    "event": { "type": "diagnostico", "params": { "mensaje": "Sin evidencia de enfermedad digestiva" } }
+    "event": { "type": "diagnostico", "params": { "mensaje": "Sin evidencia de enfermedad del sistema excretor" } }
   }
 ]
