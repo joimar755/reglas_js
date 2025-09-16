@@ -13,12 +13,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Paciente {
-  id           Int                     @id @default(autoincrement())
-  nombre       String                  @unique
-  email        String                  @unique
-  diagnosticos Diagnostico_Pacientes[]
-  createdAt    DateTime                @default(now())
+model Usuario {
+  id                   Int                     @id @default(autoincrement())
+  nombre               String                  @unique
+  email                String                  @unique
+  password             String
+  Role_Id              Int
+  role                 Role                    @relation(fields: [Role_Id], references: [id])
+  diagnosticosPaciente Diagnostico_Pacientes[] @relation("PacienteDiagnosticos")
+  diagnosticosMedico   Diagnostico_Pacientes[] @relation("MedicoDiagnosticos")
+  createdAt            DateTime                @default(now())
+  Historial            Historial[]
+}
+
+model Role {
+  id        Int       @id @default(autoincrement())
+  nombre    String    @unique // medico , paciente 
+  createdAt DateTime  @default(now())
+  Usuario   Usuario[]
 }
 
 model Rules {
@@ -46,20 +58,92 @@ model Condicion {
   @@unique([reglaId, factId])
 }
 
+model Sintomas_relacionados {
+  id         Int          @id @default(autoincrement())
+  nombre     String       @unique
+  EventRegla EventRegla[]
+}
+
+model posibles_complicaciones {
+  id         Int          @id @default(autoincrement())
+  nombre     String       @unique
+  EventRegla EventRegla[]
+}
+
+model Recomendaciones {
+  id         Int          @id @default(autoincrement())
+  nombre     String       @unique
+  EventRegla EventRegla[]
+}
+
 model EventRegla {
-  id          Int                     @id @default(autoincrement())
-  type        String
-  diagnostico String
-  reglaId     Int                     @unique
-  regla       Rules                   @relation(fields: [reglaId], references: [id])
-  pacientes   Diagnostico_Pacientes[]
+  id                Int                     @id @default(autoincrement())
+  type              String
+  diagnostico       String
+  descripcion       String
+  reglaId           Int                     @unique
+  regla             Rules                   @relation(fields: [reglaId], references: [id])
+  Sintomas_ID       Int
+  Sintomas          Sintomas_relacionados   @relation(fields: [Sintomas_ID], references: [id])
+  Complicaciones_ID Int
+  Complicaicones    posibles_complicaciones @relation(fields: [Complicaciones_ID], references: [id])
+  Recomendacion_ID  Int
+  Recomendacion     Recomendaciones         @relation(fields: [Recomendacion_ID], references: [id])
+  pacientes         Diagnostico_Pacientes[]
 }
 
 model Diagnostico_Pacientes {
   id           Int        @id @default(autoincrement())
-  pacienteId   Int
-  paciente     Paciente   @relation(fields: [pacienteId], references: [id])
-  eventReglaId Int        
+  PacienteId   Int
+  Medico_Id    Int
+  paciente     Usuario    @relation("PacienteDiagnosticos", fields: [PacienteId], references: [id])
+  medico       Usuario    @relation("MedicoDiagnosticos", fields: [Medico_Id], references: [id])
+  eventReglaId Int
   eventRegla   EventRegla @relation(fields: [eventReglaId], references: [id])
   createdAt    DateTime   @default(now())
+}
+
+model Historial {
+  id            Int          @id @default(autoincrement())
+  pacienteId    Int
+  paciente      Usuario      @relation(fields: [pacienteId], references: [id])
+  texto         String
+  resumen       Resumen?     @relation(fields: [resumenId], references: [id])
+  resumenId     Int?
+  sentimiento   Sentimiento? @relation(fields: [sentimientoId], references: [id])
+  sentimientoId Int?
+  traducciones  Traduccion[]
+  entidades     Entidad[]
+  createdAt     DateTime     @default(now())
+}
+
+model Resumen {
+  id        Int         @id @default(autoincrement())
+  texto     String
+  historial Historial[]
+  createdAt DateTime    @default(now())
+}
+
+model Entidad {
+  id          Int       @id @default(autoincrement())
+  tipo        String // ej: síntoma, pregunta, estado
+  valor       String
+  historialId Int
+  historial   Historial @relation(fields: [historialId], references: [id])
+}
+
+model Traduccion {
+  id          Int       @id @default(autoincrement())
+  idioma      String
+  texto       String
+  historialId Int
+  historial   Historial @relation(fields: [historialId], references: [id])
+}
+
+model Sentimiento {
+  id        Int         @id @default(autoincrement())
+  score     Float
+  categoria String // positivo, negativo, neutro, grave
+  historial Historial[]
+  createdAt DateTime    @default(now())
 }

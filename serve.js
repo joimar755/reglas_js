@@ -3,6 +3,8 @@ import cors from "cors";
 import { PrismaClient } from "@prisma/client";
 import { Engine } from "json-rules-engine";
 import { rules } from "./rules.js";
+import { authenticateToken } from "./middleware/auth.js"
+import bcrypt from "bcryptjs";
 const app = express();
 const prisma = new PrismaClient();
 const engine = new Engine(rules);
@@ -11,37 +13,6 @@ app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
-
-
-// Reglas médicas
-/* const rules = [
-    {
-        conditions: {
-            all: [
-                { fact: "fiebre", operator: "equal", value: true },
-                { fact: "tos", operator: "equal", value: true },
-                { fact: "dificultadParaRespirar", operator: "equal", value: true },
-            ],
-        },
-        event: {
-            type: "diagnostico",
-            params: { diagnostico: "neumonía" },
-        },
-    },
-    {
-        conditions: {
-            all: [
-                { fact: "fiebre", operator: "equal", value: true },
-                { fact: "tos", operator: "equal", value: true },
-                { fact: "dolorDeGarganta", operator: "equal", value: true },
-            ],
-        },
-        event: {
-            type: "diagnostico",
-            params: { diagnostico: "faringitis" },
-        },
-    },
-]; */
 
 // 👉 Ruta para registrar paciente y evaluar diagnóstico
 app.post("/pacientes", async (req, res) => {
@@ -76,7 +47,7 @@ app.post("/pacientes", async (req, res) => {
     res.status(500).json({ error: "Error al registrar paciente" });
   }
 });
-app.post("/test", async (req, res) => {
+app.post("/test", authenticateToken, async (req, res) => {
   try {
     const { nombre, email, hechos } = req.body;
 
@@ -194,6 +165,34 @@ app.get("/pacientes/:id", async (req, res) => {
   }
 
 });
+app.post("/register", async (req, res) => {
+  const { nombre, email, password, Role_Id } = req.body;
+  const hashp = await bcrypt.hash(password, 10);
+
+  const rol = await prisma.role.findUnique({
+    where: { nombre: Role_Id }
+  });
+  
+  if (!rol) {
+    return res.status(400).json({ message: "El rol no existe" });
+  }
+
+  const newUser = await prisma.usuario.create({
+    data: {
+      nombre,
+      email,
+      password: hashp,
+      role: {
+        connect: { id: rol.id }
+      }
+    }
+  })
+  res.status(201).json({ message: 'users registrado exitosamente' });
+
+
+})
+
+
 
 app.listen(3000, () => {
   console.log("✅ API corriendo en http://localhost:3000");

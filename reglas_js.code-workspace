@@ -1,0 +1,15 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "DHT22",
+			"path": "../PlatformIO/Projects/DHT22"
+		},
+		{
+			"path": "../../NetBeansProjects/Regla"
+		}
+	],
+	"settings": {}
+}
